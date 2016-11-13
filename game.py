@@ -2,7 +2,7 @@ from random import randint
 
 class attributes(object):
 	"""Attributes of player"""
-	def __init__(self, power,life,group,position):
+	def __init__(self,power,life,group,position):
 		self.power = power
 		self.life = life
 		self.group = group
@@ -25,20 +25,22 @@ class attributes(object):
 
 class players(attributes):
 	"""docstring for players"""
-	def __init__(self, p_id,power,life,group,position):
+	def __init__(self, p_id,name,power,life,group,position):
 		self.p_id = p_id
+		self.name = name
 		super(players, self).__init__(power, life, group, position)
 	def fight(self,env,enemy):
 		for t in range(24):
-			if player.position==enemy[t].position:
-				if (enemy[t].power_ret() >self.power_ret()):
-					self.life=self.life-1
-					if(self.life==0):
-						print 'You died'
-						exit()
-					else:
-						print 'You encountered an enemy, Life Remaining: '+ str(self.life)
-						print 'You killed Titan'+ enemy[t].e_id
+			for x in range(2):
+				if player[x].position==enemy[t].position:
+					if (enemy[t].power_ret() >self.power_ret()):
+						self.life=self.life-1
+						if(self.life==0):
+							print self.name +' died'
+							exit()
+						else:
+							print self.name +' encountered an enemy, Life Remaining: '+ str(self.life)
+							print ' killed Titan'+ enemy[t].e_id
 
 class enimies(attributes):
 	"""docstring for players"""
@@ -58,18 +60,17 @@ def title_display():
 	return k
 
 def list_player():
-	print '1.Zeus, Power:200, Type:God'
-	print '2.Presaiden, Power:200, Type:God'
+	print '0.Zeus, Power:200, Type:God'
+	print '1.Presaiden, Power:200, Type:God'
 	k=input('Enter the player no to Choose :')
 	return k
 
 size=32
 env = Environment(size)
 player_no = list_player()
-if(player_no==1):
-	player = players(1,200,3,'Blue',[0,0])
-elif (player_no==2):
-	player = players(2,200,3,'Blue',[0,0])
+player = []
+player.append(players(1,'Zeus',200,3,'God',[0,0]))
+player.append(players(2,'Presaiden',200,3,'God',[0,0]))
 enemy = []
 enemy.append(enimies(1,100,1,'Titans',[randint(1,31),randint(1,31)],env))
 enemy.append(enimies(2,100,1,'Titans',[randint(1,31),randint(1,31)],env))
@@ -97,34 +98,33 @@ enemy.append(enimies(23,100,1,'Titans',[randint(1,31),randint(1,31)],env))
 enemy.append(enimies(24,100,1,'Titans',[randint(1,31),randint(1,31)],env))
 print "Welcome to Python Game, Use 'w' 'a' 's' 'd' for controls and 'q' to quit"
 k=''
-print 'Current Position = ',player.print_pos() 
-while (k!='q' and not(player.position==[size,size])):
+print 'Current Position = ',player[player_no].print_pos() 
+while (k!='q'):
 	for t in range(24):
 		p=randint(0,1)
 		q=randint(-1,1)
 		enemy[t].change_pos_enemy(p,q,size)
 	k=title_display()
-	print "Player Position:"
+	print player[player_no].name +" Position:"
 	if k=='w':
-		player.change_pos_player(1,-1,size)
-		player.print_pos()
-		player.fight(env,enemy)
+		player[player_no].change_pos_player(1,-1,size)
+		player[player_no].print_pos()
+		player[player_no].fight(env,enemy)
 
 	elif k=='a':
-		player.change_pos_player(0,-1,size)
-		player.print_pos()
-		player.fight(env,enemy)
+		player[player_no].change_pos_player(0,-1,size)
+		player[player_no].print_pos()
+		player[player_no].fight(env,enemy)
 
 	elif k=='s':
-		player.change_pos_player(1,1,size)
-		player.print_pos()
-		player.fight(env,enemy)
+		player[player_no].change_pos_player(1,1,size)
+		player[player_no].print_pos()
+		player[player_no].fight(env,enemy)
 
 	elif k=='d':
-		player.change_pos_player(0,1,size)
-		player.print_pos()
-		player.fight(env,enemy)
+		player[player_no].change_pos_player(0,1,size)
+		player[player_no].print_pos()
+		player[player_no].fight(env,enemy)
 	for t in range(24):
 		print "Titan "+str(t+1)+":"+str(enemy[t].position)
-if player.position==[size,size]:
-	print "You WIN!!!!!!!!!!!"
+	player_no = input('Enter the player no to Choose :')
